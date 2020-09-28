@@ -35,6 +35,8 @@ values = {
     "Ace": 11,
 }
 
+ace_cards = ("Ace of Hearts", "Ace of Diamonds", "Ace of Spades", "Ace of Clubs")
+
 
 class Card:
     def __init__(self, suit, rank):
@@ -64,31 +66,18 @@ class Deck:
         return self.deck.pop()
 
 
-class Hand:
-    def __init__(self):
-        self.hand = []
-
-    def deck_sum(self):
-        sum = 0
-        for card in self.hand:
-            sum += card.value
-
-        return sum
-
-
-class Player(Hand):
+class Player:
     def __init__(self, name, balance=100):
-        Hand.__init__(self)
         self.name = name
         self.balance = balance
 
     def __str__(self):
-        return f"{self.name} has {self.balance} & {self.hand} cards"
+        return f"{self.name} has {self.balance}"
 
 
-class Dealer(Hand):
-    def __init__(self):
-        Hand.__init__(self)
+class Dealer:
+    def __init__(self, name):
+        self.name = name
 
 
 def deck_sum(cards):
@@ -112,7 +101,7 @@ def get_bet():
 
 name = input("Player, enter your name: ")
 player = Player(name, 1000)
-dealer = Dealer()
+dealer = Dealer("Dealer")
 game_on = True
 
 print("WELCOME TO BLACKJACK! \n")
@@ -121,12 +110,13 @@ while game_on:
     # Check for player's current balance
     if player.balance == 0:
         print("Sorry, you are out of money!")
+        print("Thanks for playing!")
         game_on = False
         break
 
     deck = Deck()
     print("Shuffling Deck..... \n")
-    time.sleep(3)
+    time.sleep(2.4)
     deck.shuffle()
 
     player_cards = []
@@ -147,7 +137,10 @@ while game_on:
     print("\n")
     # Distribute 2 cards for player and dealer each
     for i in range(2):
-        player_cards.append(deck.deal_one())
+        player_card = deck.deal_one()
+        # if player_card in ace_cards:
+        #     ace_choice = int(input(f"Would you like this {player_card} as 1 or 11?"))
+        player_cards.append(player_card)
         print(f"You got {player_cards[-1]}")
         dealer_cards.append(deck.deal_one())
         if i == 0:
@@ -254,6 +247,7 @@ while game_on:
 
             if player.balance == 0:
                 print("Sorry, you are out of money!")
+                print("Thanks for playing!")
                 game_on = False
                 break
 
