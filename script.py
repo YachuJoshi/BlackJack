@@ -57,7 +57,10 @@ class Deck:
                 self.deck.append(Card(suit, rank))
 
     def __str__(self):
-        return f"Your deck: {self.deck}"
+        deck_comp = ""
+        for card in self.deck:
+            deck_comp += "\n" + card.__str__()
+        return "Your deck: " + deck_comp
 
     def shuffle(self):
         random.shuffle(self.deck)
@@ -80,14 +83,6 @@ class Dealer:
         self.name = name
 
 
-def deck_sum(cards):
-    sum = 0
-    for card in cards:
-        sum += card.value
-
-    return sum
-
-
 def get_bet():
     while True:
         try:
@@ -104,7 +99,13 @@ player = Player(name, 1000)
 dealer = Dealer("Dealer")
 game_on = True
 
-print("WELCOME TO BLACKJACK! \n")
+print("\nWELCOME TO BLACKJACK!")
+print(
+    """
+Get as close to 21 as you can without going over!
+Dealer hits until she reaches wins or she busts. Aces count as 1 or 11. \n
+    """
+)
 
 while game_on:
     # Check for player's current balance
@@ -138,18 +139,31 @@ while game_on:
     # Distribute 2 cards for player and dealer each
     for i in range(2):
         player_card = deck.deal_one()
-        # if player_card in ace_cards:
-        #     ace_choice = int(input(f"Would you like this {player_card} as 1 or 11?"))
         player_cards.append(player_card)
         print(f"You got {player_cards[-1]}")
-        dealer_cards.append(deck.deal_one())
+
+        # Calculate player's deck sum
+        if player_card.__str__() in ace_cards:
+            player_ace_choice = int(input("Would you like this Ace as 1 or 11? "))
+            player_deck_sum += player_ace_choice
+        else:
+            player_deck_sum += player_card.value
+
+        dealer_card = deck.deal_one()
+        dealer_cards.append(dealer_card)
+
         if i == 0:
             print(f"Dealer got {dealer_cards[-1]}")
         else:
             print("Dealer Card hidden")
+            print('\n')
 
-    player_deck_sum = deck_sum(player_cards)
-    dealer_deck_sum = deck_sum(dealer_cards)
+        # Calculate dealer's deck sum
+        if dealer_card.__str__() in ace_cards:
+            dealer_ace_choice = 11 if random.randint(0, 2) > 1 else 1
+            dealer_deck_sum += dealer_ace_choice
+        else:
+            dealer_deck_sum += dealer_card.value
 
     # Check for Player BLACKJACK Condition
     if player_deck_sum == 21:
@@ -176,8 +190,15 @@ while game_on:
         while player_choice == "Hit":
             new_card = deck.deal_one()
             player_cards.append(new_card)
-            player_deck_sum += player_cards[-1].value
+
             print(f"You got {player_cards[-1]}")
+
+            # player_deck_sum += new_card.value
+            if new_card.__str__() in ace_cards:
+                player_ace_choice = int(input("Would you like this Ace as 1 or 11? "))
+                player_deck_sum += player_ace_choice
+            else:
+                player_deck_sum += new_card.value
 
             if player_deck_sum >= 21:
                 break
@@ -211,6 +232,7 @@ while game_on:
                     break
         else:
             # Flip dealer's second card
+            print("\n")
             print(f"Dealer's second card was {dealer_cards[-1]}")
 
             while True:
