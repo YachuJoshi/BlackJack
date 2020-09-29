@@ -1,86 +1,8 @@
 import random
 import time
-
-suits = ("Hearts", "Diamonds", "Spades", "Clubs")
-
-ranks = (
-    "Two",
-    "Three",
-    "Four",
-    "Five",
-    "Six",
-    "Seven",
-    "Eight",
-    "Nine",
-    "Ten",
-    "Jack",
-    "Queen",
-    "King",
-    "Ace",
-)
-
-values = {
-    "Two": 2,
-    "Three": 3,
-    "Four": 4,
-    "Five": 5,
-    "Six": 6,
-    "Seven": 7,
-    "Eight": 8,
-    "Nine": 9,
-    "Ten": 10,
-    "Jack": 10,
-    "Queen": 10,
-    "King": 10,
-    "Ace": 11,
-}
-
-ace_cards = ("Ace of Hearts", "Ace of Diamonds", "Ace of Spades", "Ace of Clubs")
-
-
-class Card:
-    def __init__(self, suit, rank):
-        self.suit = suit
-        self.rank = rank
-        self.value = values[rank]
-
-    def __str__(self):
-        return self.rank + " of " + self.suit
-
-
-class Deck:
-    def __init__(self):
-        self.deck = []
-
-        for suit in suits:
-            for rank in ranks:
-                self.deck.append(Card(suit, rank))
-
-    def __str__(self):
-        deck_comp = ""
-        for card in self.deck:
-            deck_comp += "\n" + card.__str__()
-        return "Your deck: " + deck_comp
-
-    def shuffle(self):
-        random.shuffle(self.deck)
-
-    def deal_one(self):
-        return self.deck.pop()
-
-
-class Player:
-    def __init__(self, name, balance=100):
-        self.name = name
-        self.balance = balance
-
-    def __str__(self):
-        return f"{self.name} has {self.balance}"
-
-
-class Dealer:
-    def __init__(self, name):
-        self.name = name
+from Deck import Deck
+from Constants import ace_cards
+from Player import Player, Dealer
 
 
 def get_bet():
@@ -96,6 +18,7 @@ def get_bet():
 
 name = input("Player, enter your name: ")
 player = Player(name, 1000)
+print(f'You have a total balance of: {player.balance}')
 dealer = Dealer("Dealer")
 game_on = True
 
@@ -156,7 +79,7 @@ while game_on:
             print(f"Dealer got {dealer_cards[-1]}")
         else:
             print("Dealer Card hidden")
-            print('\n')
+            print("\n")
 
         # Calculate dealer's deck sum
         if dealer_card.__str__() in ace_cards:
