@@ -1,5 +1,5 @@
-from Constants import suits, ranks, values
-from Card import Card
+from base import suits, ranks, values
+from card import Card
 import random
 
 
